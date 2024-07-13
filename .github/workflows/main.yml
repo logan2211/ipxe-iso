@@ -2,8 +2,7 @@ on: [push] #foo
 jobs:
   make-ipxe:
     name: make ipxe
-    runs-on: ubuntu-20.04
-    container: ubuntu:24.04
+    runs-on: ubuntu-24.04
     steps:
       - name: checkout self/this
         uses: actions/checkout@v4
@@ -17,10 +16,9 @@ jobs:
           #ref: v1.20.1 #try to go with latest
           repository: ipxe/ipxe
           path: ipxe
-      - name: install ipxe build deps into container
+      - name: install ipxe build deps
         run: |
-          apt update
-          apt install -y build-essential
+          sudo apt install -y build-essential isolinux mtools xorriso
       - name: build ipxe
         run: |
           self_root="${GITHUB_WORKSPACE}/self"
@@ -31,8 +29,17 @@ jobs:
           cd ${ipxe_root}/src/
           #make bin-x86_64-efi/ipxe.efi EMBED=config.ipxe -j2
           make bin-x86_64-efi/snponly.efi EMBED=config.ipxe -j2
+          make bin-x86_64-efi/ipxe.iso EMBED=config.ipxe -j2
       - name: upload ipxe.efi as artifact
         uses: actions/upload-artifact@v4
         with:
           name: snponly.efi
-          path: ${{ github.workspace }}/ipxe/src/bin-x86_64-efi/snponly.efi
+          path: |
+            ${{ github.workspace }}/ipxe/src/bin-x86_64-efi/snponly.efi
+      - name: upload ipxe.efi as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipxe.iso
+          path: |
+            ${{ github.workspace }}/ipxe/src/bin-x86_64-efi/ipxe.iso
+

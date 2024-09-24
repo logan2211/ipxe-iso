@@ -16,7 +16,7 @@ choose --default ubuntu2404 --timeout 30000 action && goto ${action}
 
 :ubuntu2404
 dhcp
-kernel ${ubuntu_2404}/netboot/amd64/linux root=/dev/ram0 ramdisk_size=1500000 ip=dhcp iso-url=${ubuntu_2404}/ubuntu-24.04-live-server-amd64.iso ---
+kernel ${ubuntu_2404}/netboot/amd64/linux root=/dev/ram0 ramdisk_size=1500000 ip=dhcp iso-url=${ubuntu_2404}/ubuntu-24.04.1-live-server-amd64.iso ---
 initrd ${ubuntu_2404}/netboot/amd64/initrd
 boot || goto menu
 goto menu
